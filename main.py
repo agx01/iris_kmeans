@@ -85,8 +85,8 @@ class K_Means_Cluster:
         
         if metric == "Euclidean":
             pred_setosa = data[data["pred_Y"] == 2]
-            pred_virginica = data[data["pred_Y"] == 1]
-            pred_versicolor = data[data["pred_Y"] == 0]
+            pred_virginica = data[data["pred_Y"] == 0]
+            pred_versicolor = data[data["pred_Y"] == 1]
             
             #True values
             true_setosa_count = len(iris_setosa[iris_setosa["pred_Y"] == 2])
