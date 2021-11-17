@@ -11,9 +11,11 @@ import random
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 import seaborn as sns
-from mpl_toolkits.mplot3d import Axes3D
 
-class KMeans:
+from sklearn.cluster import KMeans as kms
+
+
+class K_Means_Cluster:
     
     def __init__(self, num_clusters):
         data = pd.read_csv('data/iris.data', names = ['slength', 'swidth', 'plength', 'pwidth', 'species'])
@@ -21,6 +23,8 @@ class KMeans:
         c2 = data['swidth'].values
         c3 = data['plength'].values
         c4 = data['pwidth'].values
+        
+        self.initial_visualization(data)
         
         #Input array
         self.X = np.array(list(zip(c1,c2,c3,c4)), dtype=np.float32)
@@ -35,6 +39,84 @@ class KMeans:
         self.Y = np.array(data['species_cat'].values)
         
         self.predict_all()
+        
+    def check_accuracy(self, data, metric):
+        iris_setosa = data[data["species"] == "Iris-setosa"]
+        iris_virginica = data[data["species"] == "Iris-virginica"]
+        iris_versicolor = data[data["species"] == "Iris-versicolor"]
+        
+        if metric == "Euclidean":
+            pred_setosa = data[data["pred_Y"] == 2]
+            pred_virginica = data[data["pred_Y"] == 1]
+            pred_versicolor = data[data["pred_Y"] == 0]
+            
+            #True values
+            true_setosa_count = len(iris_setosa[iris_setosa["pred_Y"] == 2])
+            true_virginica_count = len(iris_virginica[iris_virginica["pred_Y"] == 0])
+            true_versicolor_count = len(iris_versicolor[iris_versicolor["pred_Y"] == 1])
+        else:
+            pred_setosa = data[data["pred_Y"] == 2]
+            pred_virginica = data[data["pred_Y"] == 1]
+            pred_versicolor = data[data["pred_Y"] == 0]
+            
+            #True values
+            true_setosa_count = len(iris_setosa[iris_setosa["pred_Y"] == 2])
+            true_virginica_count = len(iris_virginica[iris_virginica["pred_Y"] == 1])
+            true_versicolor_count = len(iris_versicolor[iris_versicolor["pred_Y"] == 0])
+        
+        #Counting the actual values
+        act_setosa_count = len(iris_setosa)
+        act_virginica_count = len(iris_virginica)
+        act_versicolor_count = len(iris_versicolor)
+        
+        #Counting the predicted values
+        pred_setosa_count = len(pred_setosa)
+        pred_virginica_count = len(pred_virginica)
+        pred_versicolor_count = len(pred_versicolor)
+        
+        #False values
+        false_setosa_count = act_setosa_count - true_setosa_count
+        false_virginica_count = act_virginica_count - true_virginica_count
+        false_versicolor_count = act_versicolor_count - true_versicolor_count
+        
+        total_correct_count = true_setosa_count + true_virginica_count + true_versicolor_count
+        total_records = len(data)
+        
+        print(f"Overall Accuracy using {metric} distance is : {(total_correct_count/total_records)*100}")
+        
+    def initial_visualization(self, data):
+        print("Understanding the data:")
+        print(data.info())
+        print(data.describe())
+        
+        #Choosing the number of clusters
+        #Within cluster sum of squares
+        wcss = []
+        x = data.iloc[:, [0, 1 ,2, 3]].values        
+        for i in range(1, 11):
+            kmeans = kms(n_clusters=i, init='k-means++', max_iter=300, n_init = 10, random_state=0)
+            kmeans.fit(x)
+            wcss.append(kmeans.inertia_)
+            
+        plt.plot(range(1,11), wcss)
+        plt.title('The Elbow Methdod')
+        plt.xlabel('Number of Clusters')
+        plt.ylabel('WCSS')
+        plt.show()
+        
+        #Visualizing the data in 3D
+        kmeans = kms(n_clusters=3, init='k-means++', max_iter=300, n_init=10, random_state=0)
+        y_kmeans = kmeans.fit_predict(x)
+        fig = plt.figure(figsize = (15, 15))
+        ax = fig.add_subplot(111, projection='3d')
+        plt.scatter(x[y_kmeans == 0, 0], x[y_kmeans ==0, 1], s =100, c = 'purple', label = 'Iris-setosa')
+        plt.scatter(x[y_kmeans == 1, 0], x[y_kmeans ==1, 1], s =100, c = 'orange', label = 'Iris-versicolor')
+        plt.scatter(x[y_kmeans == 2, 0], x[y_kmeans ==2, 1], s =100, c = 'green', label = 'Iris-virginica')
+        plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], s =100, c = 'red', label = 'Centroids')
+        plt.suptitle("Sample and Centroid Visualization")
+        plt.show()
+        
+        print("Visualization complete")
     
     def predict_all(self):
         X = self.X
@@ -79,8 +161,8 @@ class KMeans:
         
         print(f"Y labels: {self.Y}")
         print(f"Predicted Values: {clusters}")
-        print(f"Accuracy Score (Euclidean distance): {accuracy_score(self.Y, clusters)}")
-        self.data_visualization(clusters)
+        #print(f"Accuracy Score (Euclidean distance): {accuracy_score(self.Y, clusters)}")
+        self.data_visualization(clusters, "Euclidean")
         
         
         #Calculating using the Manhattan distance
@@ -124,10 +206,10 @@ class KMeans:
         
         print(f"Y labels: {self.Y}")
         print(f"Predicted Values: {clusters}")
-        print(f"Accuracy Score (Manhattan distance): {accuracy_score(self.Y, clusters)}")
-        self.data_visualization(clusters)
         
-    def data_visualization(self, clusters):
+        self.data_visualization(clusters, "Manhattan")
+        
+    def data_visualization(self, clusters, metric):
         df2 = pd.read_csv("data/iris.data", names = ['slength',
                                                      'swidth',
                                                      'plength',
@@ -141,7 +223,18 @@ class KMeans:
         iris_outcome3 = pd.crosstab([df2['species'],df2['pred_Y']], "count")
         print(f"Predicted Class Count: {iris_outcome3}")
         
-        fig2, axes2 = plt.subplots(2,4, sharex=True, sharey=True)
+        """
+        cluster_setosa = iris_outcome3["species" == "Iris-setosa"]
+        cluster_versicolor = iris_outcome3["species" == "Iris-versicolor"]
+        cluster_virginica = iris_outcome3["species" == "Iris-virginica"]
+        cluster_setosa = cluster_setosa.count >= cluster_setosa.count
+        cluster_versicolor = cluster_versicolor.count >= cluster_versicolor.count
+        cluster_virginica = cluster_virginica.count >= cluster_virginica.count
+        """
+        
+        fig2, axes2 = plt.subplots(2,4, sharey=True)
+        #fig2.set_title(f"Actual vs Predicted (metric)")
+        plt.suptitle(f"Actual vs Predicted ({metric})")
         
         #Actual data charts
         sns.barplot(ax=axes2[0][0], x = "species", y = "slength", data=df2)
@@ -157,43 +250,7 @@ class KMeans:
         
         plt.show()
         
-        """
-        new_df = pd.DataFrame(self.X, columns = ['slength', 'swidth', 'plength', 'pwidth'])
-        new_df['actual_Y'] = self.Y
-        new_df['pred_Y'] = clusters
-        """
-        """
-        actualY_df = new_df.loc[:, new_df.columns != 'pred_Y']
-        
-        print(new_df.head())
-        sns.set_style("whitegrid")
-        sns.pairplot(actualY_df, vars=['slength'], hue="actual_Y", palette="tab10")
-        
-        predY_df = new_df.loc[:, new_df.columns != 'actual_Y']
-        sns.set_style("whitegrid")
-        sns.PairGrid(predY_df, vars = ['slength'], hue="pred_Y", palette="tab10")
-        """
-        
-        """
-        #using the cross tab
-        iris_outcome = pd.crosstab(index=new_df["actual_Y"])
-        
-        # using a 3-D scatter plot
-        fig, axs =  plt.subplots(1, 1)
-        axs[0] = Axes3D(fig)
-        axs[0].scatter(new_df['slength'].values, 
-                   new_df['swidth'].values, 
-                   new_df['plength'], 
-                   s=new_df['pwidth']+10, 
-                   c=new_df['actual_Y'],
-                   cmap = "tab10")
-        axs[0].set_xlabel("Sepal Length")
-        axs[0].set_ylabel("Sepal Width")
-        axs[0].set_zlabel("Petal Length")
-        
-        plt.show()
-        
-        """
+        self.check_accuracy(df2, metric)
         
     def predict(self):
         X = self.X
@@ -260,4 +317,4 @@ class KMeans:
     
         
 if __name__ == "__main__":
-    k_means = KMeans(num_clusters=3)
+    k_means = K_Means_Cluster(num_clusters=3)
