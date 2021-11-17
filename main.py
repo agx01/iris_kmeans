@@ -18,16 +18,36 @@ from sklearn.cluster import KMeans as kms
 class K_Means_Cluster:
     
     def __init__(self, num_clusters):
+        """
+        Initialize the class for K Means Clustering.
+        The process is as follows:
+            1. Read the data from the file into Datafrane.
+            2. Build the 2d numpy array to be used in K means algorithm
+            3. Call Initialize visualization
+            4. Initalize the number of clusters object in class
+            5. Convert the label column in the data into encoded values
+            6. Calls the predict all function
+
+        Parameters
+        ----------
+        num_clusters : int
+            Integer value to store the number of clusters
+
+        Returns
+        -------
+        None.
+
+        """
         data = pd.read_csv('data/iris.data', names = ['slength', 'swidth', 'plength', 'pwidth', 'species'])
         c1 = data['slength'].values    
         c2 = data['swidth'].values
         c3 = data['plength'].values
         c4 = data['pwidth'].values
         
-        self.initial_visualization(data)
-        
         #Input array
         self.X = np.array(list(zip(c1,c2,c3,c4)), dtype=np.float32)
+        
+        self.initial_visualization(data)
         
         #Number of clusters
         self.num_clusters = num_clusters
@@ -41,6 +61,24 @@ class K_Means_Cluster:
         self.predict_all()
         
     def check_accuracy(self, data, metric):
+        """
+        Function checks the accuracy of the data for both metrics:
+            Euclidean
+            Manhattan
+
+        Parameters
+        ----------
+        data : Pandas DataFrame
+            Dataframe includes the raw data values and includes the 
+            predicted label values as well.
+        metric : string
+            describes the metric used for which we are checking in accuracy
+
+        Returns
+        -------
+        None.
+
+        """
         iris_setosa = data[data["species"] == "Iris-setosa"]
         iris_virginica = data[data["species"] == "Iris-virginica"]
         iris_versicolor = data[data["species"] == "Iris-versicolor"]
@@ -85,6 +123,21 @@ class K_Means_Cluster:
         print(f"Overall Accuracy using {metric} distance is : {(total_correct_count/total_records)*100}")
         
     def initial_visualization(self, data):
+        """
+        This function is to display the initial visualization.
+        1. How to choose K - values?
+        2. Visualizing the scatter plot and the centroids
+
+        Parameters
+        ----------
+        data : Pandas dataframe
+            Raw data in the form of pandas data frame
+
+        Returns
+        -------
+        None.
+
+        """
         print("Understanding the data:")
         print(data.info())
         print(data.describe())
@@ -119,6 +172,18 @@ class K_Means_Cluster:
         print("Visualization complete")
     
     def predict_all(self):
+        """
+        This function builds will use Euclidean and Manhattan distances
+        to create the K -means clustering.
+        
+        This also calls the data visualization function to check see
+        how the metrics have performed
+
+        Returns
+        -------
+        None.
+
+        """
         X = self.X
         
         #Assigning the centroids
@@ -210,6 +275,22 @@ class K_Means_Cluster:
         self.data_visualization(clusters, "Manhattan")
         
     def data_visualization(self, clusters, metric):
+        """
+        Visualizing the cluster formations
+
+        Parameters
+        ----------
+        clusters : List of integers
+            This is list of predicted cluster values. Each row corresponds
+            to each predicted value in X
+        metric : string
+            The argument states which metric is being used.
+
+        Returns
+        -------
+        None.
+
+        """
         df2 = pd.read_csv("data/iris.data", names = ['slength',
                                                      'swidth',
                                                      'plength',
@@ -222,15 +303,6 @@ class K_Means_Cluster:
         print(f"Predicted Class Count: {iris_outcome2}")
         iris_outcome3 = pd.crosstab([df2['species'],df2['pred_Y']], "count")
         print(f"Predicted Class Count: {iris_outcome3}")
-        
-        """
-        cluster_setosa = iris_outcome3["species" == "Iris-setosa"]
-        cluster_versicolor = iris_outcome3["species" == "Iris-versicolor"]
-        cluster_virginica = iris_outcome3["species" == "Iris-virginica"]
-        cluster_setosa = cluster_setosa.count >= cluster_setosa.count
-        cluster_versicolor = cluster_versicolor.count >= cluster_versicolor.count
-        cluster_virginica = cluster_virginica.count >= cluster_virginica.count
-        """
         
         fig2, axes2 = plt.subplots(2,4, sharey=True)
         #fig2.set_title(f"Actual vs Predicted (metric)")
