@@ -41,6 +41,7 @@ Using the Euclidean distance metric, we get the following results. Plotting the 
 | Iris-virginica | Cluster 0 |
 | Iris-versicolor | Cluster 1 |
 
+### Actual vs Predicted Values Box Plot for the Features
 ![Box Plot of Features (Euclidean Distance)](https://github.com/agx01/iris_kmeans/blob/main/EuclideanDistance.png?raw=true)
     
 For this metric, we get an accuracy of **86.667%**.
@@ -55,6 +56,7 @@ Using the Manhattan distance metric, we get the following results. Plotting the 
 | Iris-virginica | Cluster 1 |
 | Iris-versicolor | Cluster 0 |
 
+### Actual vs Predicted Values Box Plot for the Features
 ![Box Plot of Features (Manhattan Distance)](https://github.com/agx01/iris_kmeans/blob/main/ManhattanDistance.png?raw=true)
     
 For this metric, we get an accuracy of **86.667%**.
