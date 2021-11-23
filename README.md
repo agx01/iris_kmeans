@@ -52,8 +52,8 @@ Using the Manhattan distance metric, we get the following results. Plotting the 
 | Species | Cluster Number |
 | :---: | :---: |
 | Iris-Setosa | Cluster 2 |
-| Iris-virginica | Cluster 0 |
-| Iris-versicolor | Cluster 1 |
+| Iris-virginica | Cluster 1 |
+| Iris-versicolor | Cluster 0 |
 
 ![Box Plot of Features (Manhattan Distance)](https://github.com/agx01/iris_kmeans/blob/main/ManhattanDistance.png?raw=true)
     
