@@ -33,21 +33,21 @@ Main challenges of K-means algorithms:
 ## Results
 
 ### Euclidean Distance metrics
-    Using the Euclidean distance metric, we get the following results. Plotting the box-plots for the actual classes and predicted clusters, gives a relation between the cluster and the label to use as mapping.
-    Iris-Setosa     -> Cluster 2
-    Iris-virginica  -> Cluster 0
-    Iris-versicolor -> Cluster 1
-    ![Box Plot of Features (Euclidean Distance)](https://github.com/agx01/iris_kmeans/blob/main/EuclideanDistance.png?raw=true)
+Using the Euclidean distance metric, we get the following results. Plotting the box-plots for the actual classes and predicted clusters, gives a relation between the cluster and the label to use as mapping.
+Iris-Setosa     -> Cluster 2
+Iris-virginica  -> Cluster 0
+Iris-versicolor -> Cluster 1
+![Box Plot of Features (Euclidean Distance)](https://github.com/agx01/iris_kmeans/blob/main/EuclideanDistance.png?raw=true)
     
-    For this metric, we get an accuracy of **86.667%**.
-    ![Results of Euclidean Metric](https://github.com/agx01/iris_kmeans/blob/main/Euclidean_results.png?raw=true)
+For this metric, we get an accuracy of **86.667%**.
+![Results of Euclidean Metric](https://github.com/agx01/iris_kmeans/blob/main/Euclidean_results.png?raw=true)
     
 ### Manhattan Distance metrics
-    Using the Manhattan distance metric, we get the following results. Plotting the box-plots for the actual classes and predicted clusters, gives a relation between the cluster and the label to use as mapping.
-    Iris-Setosa     -> Cluster 2
-    Iris-virginica  -> Cluster 1
-    Iris-versicolor -> Cluster 0
-    ![Box Plot of Features (Manhattan Distance)](https://github.com/agx01/iris_kmeans/blob/main/ManhattanDistance.png?raw=true)
+Using the Manhattan distance metric, we get the following results. Plotting the box-plots for the actual classes and predicted clusters, gives a relation between the cluster and the label to use as mapping.
+Iris-Setosa     -> Cluster 2
+Iris-virginica  -> Cluster 1
+Iris-versicolor -> Cluster 0
+![Box Plot of Features (Manhattan Distance)](https://github.com/agx01/iris_kmeans/blob/main/ManhattanDistance.png?raw=true)
     
-    For this metric, we get an accuracy of **86.667%**.
-    ![Results of Euclidean Metric](https://github.com/agx01/iris_kmeans/blob/main/Manhattan_results.png?raw=true)
+For this metric, we get an accuracy of **86.667%**.
+![Results of Euclidean Metric](https://github.com/agx01/iris_kmeans/blob/main/Manhattan_results.png?raw=true)
